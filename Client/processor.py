@@ -1,8 +1,8 @@
 # coding=utf-8
 
-import locale
+__author__ = "AlvinYuan"
+
 import socket
-import subprocess
 import logging
 import re
 import time
@@ -67,7 +67,37 @@ class Processor:
 
         return dic
 
-    def check(self):
+    def search(self, path, pattern):
+        all_files = os.listdir(path)
+        f_list = []
+        for f in all_files:
+            if os.path.isdir(path + self.sep + f):
+                if pattern is None:
+                    return True
+                else:
+                    p = re.compile(pattern)
+                    m = p.match(f)
+                    if m:
+                        flag = True
+                    else:
+                        flag = False
+
+                if flag:
+                    f_list.append(path + self.sep + f)
+
+        return f_list
+
+    def find(self):
+        self.logger.info(u"开始查找要备份的日志 ……")
+        f_dic = {}
+        pattern = u"\d{4}-\d{2}-\d{2}"
+        path_dic = self.get_path()
+        for key, paths in path_dic.items():
+            for path in paths:
+                if not os.path.exists(path):
+                    self.send(u"【错误】 不能开始备份，路径\"" + path + u"\"不存在！")
+
+    def exposed_check(self):
         self.logger.info(u"收到服务器请求，开始检查磁盘空间 ……")
         drives = set()
         index = 0 if self.system == u"Windows" else 1
@@ -77,10 +107,11 @@ class Processor:
                 drive = value.replace(self.sep, u"/").split(u"/")[index]
                 drives.add(drive if self.system == u"Windows" else u"/" + drive)
 
+        dic = {}
         threshold = self.get_client_conf(u"threshold")
-        lst = []
         for drive in drives:
             usage = disk_usage(drive).percent
             self.logger.info(u"磁盘使用率 --- " + drive + u" ==> " + unicode(usage) + u"%")
-            if usage >= threshold:
-                return []
+            dic[drive] = usage
+
+        return [threshold, dic]
