@@ -145,7 +145,7 @@ def menu():
         print u"选项："
         print u"    S：备份单个服务器"
         print u"    A: 备份所有可连接的服务器（True/False）"
-        print u"    G: 备份使用率超出阀值的服务器（True）"
+        print u"    G: 备份使用率超出阈值的服务器（True）"
         print
         print u"    E: 退出"
         print
