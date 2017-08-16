@@ -22,8 +22,6 @@ from rpyc import Service
 from rpyc.utils.server import ThreadedServer
 from psutil import disk_usage
 
-__author__ = u"AlvinYuan"
-
 
 class Client(Service):
     @staticmethod

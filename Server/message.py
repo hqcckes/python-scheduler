@@ -10,8 +10,6 @@ from rpyc import Service
 from rpyc.utils.server import ThreadedServer
 from ConfigParser import SafeConfigParser
 
-__author__ = u"AlvinYuan"
-
 
 class Message(Service):
     @staticmethod
